@@ -52,21 +52,22 @@ export function AdminConfigProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
   }, [config])
 
-  // Dynamic font loading
+  // Dynamic font loading for brand and body fonts
   useEffect(() => {
-    const font = config.typography.fontFamily
-    if (font && font !== 'Inter') {
-      const linkId = 'admin-font-link'
-      document.getElementById(linkId)?.remove()
+    const builtIn = ['Plus Jakarta Sans', 'DM Sans', 'Inter']
+    const fontsToLoad = [config.typography.brandFont, config.typography.bodyFont]
+      .filter(f => f && !builtIn.includes(f))
+      .filter((f, i, arr) => arr.indexOf(f) === i)
+
+    document.querySelectorAll('[data-admin-font]').forEach(el => el.remove())
+    fontsToLoad.forEach(font => {
       const link = document.createElement('link')
-      link.id = linkId
+      link.setAttribute('data-admin-font', font)
       link.rel = 'stylesheet'
-      link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`
+      link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`
       document.head.appendChild(link)
-    } else {
-      document.getElementById('admin-font-link')?.remove()
-    }
-  }, [config.typography.fontFamily])
+    })
+  }, [config.typography.brandFont, config.typography.bodyFont])
 
   const updateConfig = useCallback((path, value) => {
     setConfig(prev => setNestedValue(prev, path, value))
