@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAdminConfig } from '../admin/AdminConfigContext'
 
 // Google Icon SVG
 const GoogleIcon = () => (
@@ -11,8 +12,8 @@ const GoogleIcon = () => (
 )
 
 // Course Card Component for the left side
-const CourseCard = ({ title, instructor, image, className = '' }) => (
-  <div className={`bg-bg-surface rounded-lg p-4 shadow-sm border border-white/10 ${className}`}>
+const CourseCard = ({ title, instructor, image, className = '', borderRadius }) => (
+  <div className={`bg-bg-surface p-4 shadow-sm border border-white/10 ${className}`} style={{ borderRadius: `${borderRadius}px` }}>
     <div className="w-full h-24 bg-bg-muted rounded mb-3 overflow-hidden">
       {image && <img src={image} alt={title} className="w-full h-full object-cover" />}
     </div>
@@ -21,7 +22,14 @@ const CourseCard = ({ title, instructor, image, className = '' }) => (
   </div>
 )
 
+const CARD_STYLES = [
+  'w-48 opacity-90',
+  'w-48 opacity-70 translate-y-4',
+  'w-48 opacity-50 translate-y-8',
+]
+
 export default function Signup() {
+  const { config } = useAdminConfig()
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -35,100 +43,142 @@ export default function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Signup submitted:', formData)
-    // Handle signup logic here
   }
 
+  const c = config.colors
+  const t = config.typography
+  const content = config.content
+  const layout = config.layout
+  const radius = `${layout.borderRadius}px`
+  const fontStyle = { fontFamily: `'${t.fontFamily}', system-ui, sans-serif` }
+
   return (
-    <div className="min-h-screen bg-bg-page flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ ...fontStyle, backgroundColor: c.brandCanvas }}>
       {/* Browser Chrome Bar */}
-      <div className="bg-[#F5F5F3] border-b border-[#EDEDED] px-4 py-2 flex items-center gap-2">
-        <div className="flex gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-border-default" />
-          <div className="w-2.5 h-2.5 rounded-full bg-border-default" />
-          <div className="w-2.5 h-2.5 rounded-full bg-border-default" />
+      {layout.showBrowserChrome && (
+        <div className="bg-[#F5F5F3] border-b border-[#EDEDED] px-4 py-2 flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
+          </div>
+          <div className="flex-1 flex justify-center">
+            <span className="text-text-tertiary text-sm">klasse.io/signup</span>
+          </div>
         </div>
-        <div className="flex-1 flex justify-center">
-          <span className="text-text-tertiary text-sm">klasse.io/signup</span>
-        </div>
-      </div>
+      )}
 
       {/* Main Content */}
-      <div className="flex-1 flex p-5 gap-5">
-        {/* Left Side - Branding */}
-        <div className="flex-1 bg-brand-ink rounded-2xl p-16 flex flex-col justify-between relative overflow-hidden">
+      <div
+        className="flex-1 flex p-5 gap-5"
+        style={{ flexDirection: layout.brandPanelPosition === 'right' ? 'row-reverse' : 'row' }}
+      >
+        {/* Branding Side */}
+        <div
+          className="flex-1 rounded-2xl p-16 flex flex-col justify-between relative overflow-hidden"
+          style={{ backgroundColor: c.brandInk }}
+        >
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-action-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">K</span>
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: c.actionPrimary }}
+            >
+              <span className="text-white font-bold text-sm">{content.logoLetter}</span>
             </div>
-            <span className="text-text-on-dark font-semibold text-lg">klasse</span>
+            <span className="font-semibold text-lg" style={{ color: c.textOnDark }}>
+              {content.logoText}
+            </span>
           </div>
 
           {/* Headline */}
           <div className="max-w-md">
-            <h1 className="text-text-on-dark text-4xl font-bold leading-tight mb-4">
-              Create and sell courses in minutes, not months
+            <h1
+              className="leading-tight mb-4"
+              style={{
+                color: c.textOnDark,
+                fontSize: t.headlineSize,
+                fontWeight: t.headlineWeight,
+              }}
+            >
+              {content.headline}
             </h1>
-            <p className="text-text-on-dark/70 text-lg">
-              Join thousands of creators building their knowledge business with Klasse.
+            <p style={{ color: `${c.textOnDark}b3`, fontSize: t.bodySize }} className="text-lg">
+              {content.subheadline}
             </p>
           </div>
 
           {/* Course Cards Preview */}
-          <div className="relative">
-            <div className="flex gap-4">
-              <CourseCard 
-                title="Introduction to UX Design"
-                instructor="Sarah Chen"
-                className="w-48 opacity-90"
-              />
-              <CourseCard 
-                title="Advanced Photography"
-                instructor="Marcus Rivera"
-                className="w-48 opacity-70 translate-y-4"
-              />
-              <CourseCard 
-                title="Music Production 101"
-                instructor="Alex Kim"
-                className="w-48 opacity-50 translate-y-8"
-              />
+          {layout.showCourseCards && (
+            <div className="relative">
+              <div className="flex gap-4">
+                {config.cards
+                  .filter(card => card.visible)
+                  .map((card, i) => (
+                    <CourseCard
+                      key={i}
+                      title={card.title}
+                      instructor={card.instructor}
+                      image={card.image}
+                      borderRadius={layout.borderRadius}
+                      className={CARD_STYLES[i] || CARD_STYLES[CARD_STYLES.length - 1]}
+                    />
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Decorative gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-brand-ink to-transparent" />
+          <div
+            className="absolute bottom-0 left-0 right-0 h-32"
+            style={{
+              background: `linear-gradient(to top, ${c.brandInk}, transparent)`,
+            }}
+          />
         </div>
 
-        {/* Right Side - Signup Form */}
+        {/* Signup Form Side */}
         <div className="flex-1 flex items-center justify-center p-16">
           <div className="w-full max-w-md">
             {/* Form Header */}
             <div className="text-center mb-8">
-              <h2 className="text-text-primary text-2xl font-bold mb-2">
-                Create your account
+              <h2
+                className="font-bold mb-2"
+                style={{ color: c.textPrimary, fontSize: t.formTitleSize }}
+              >
+                {content.formTitle}
               </h2>
-              <p className="text-text-secondary">
-                Start building in under 2 minutes
+              <p style={{ color: c.textSecondary, fontSize: t.bodySize }}>
+                {content.formSubtitle}
               </p>
             </div>
 
             {/* Google Sign Up */}
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-border-default rounded-lg hover:bg-bg-hover transition-colors mb-6">
-              <GoogleIcon />
-              <span className="text-text-primary font-medium">Continue with Google</span>
-            </button>
+            {layout.showGoogleButton && (
+              <button
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 border hover:bg-bg-hover transition-colors mb-6"
+                style={{ borderColor: c.borderDefault, borderRadius: radius }}
+              >
+                <GoogleIcon />
+                <span className="font-medium" style={{ color: c.textPrimary }}>
+                  {content.googleButtonText}
+                </span>
+              </button>
+            )}
 
             {/* Divider */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex-1 h-px bg-border-default" />
-              <span className="text-text-tertiary text-sm">or sign up with email</span>
-              <div className="flex-1 h-px bg-border-default" />
-            </div>
+            {layout.showDivider && (
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex-1 h-px" style={{ backgroundColor: c.borderDefault }} />
+                <span className="text-text-tertiary text-sm">{content.dividerText}</span>
+                <div className="flex-1 h-px" style={{ backgroundColor: c.borderDefault }} />
+              </div>
+            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="fullName" className="block text-text-primary text-sm font-medium mb-1.5">
+                <label htmlFor="fullName" className="block text-sm font-medium mb-1.5" style={{ color: c.textPrimary }}>
                   Full Name
                 </label>
                 <input
@@ -138,12 +188,19 @@ export default function Signup() {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 border border-border-default rounded-lg focus:outline-none focus:border-border-focus focus:ring-2 focus:ring-action-primary/20 transition-all placeholder:text-text-tertiary"
+                  className="w-full px-4 py-3 border focus:outline-none focus:ring-2 transition-all placeholder:text-text-tertiary"
+                  style={{
+                    borderColor: c.borderDefault,
+                    borderRadius: radius,
+                    '--tw-ring-color': `${c.borderFocus}33`,
+                  }}
+                  onFocus={e => e.target.style.borderColor = c.borderFocus}
+                  onBlur={e => e.target.style.borderColor = c.borderDefault}
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-text-primary text-sm font-medium mb-1.5">
+                <label htmlFor="email" className="block text-sm font-medium mb-1.5" style={{ color: c.textPrimary }}>
                   Email
                 </label>
                 <input
@@ -153,12 +210,19 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full px-4 py-3 border border-border-default rounded-lg focus:outline-none focus:border-border-focus focus:ring-2 focus:ring-action-primary/20 transition-all placeholder:text-text-tertiary"
+                  className="w-full px-4 py-3 border focus:outline-none focus:ring-2 transition-all placeholder:text-text-tertiary"
+                  style={{
+                    borderColor: c.borderDefault,
+                    borderRadius: radius,
+                    '--tw-ring-color': `${c.borderFocus}33`,
+                  }}
+                  onFocus={e => e.target.style.borderColor = c.borderFocus}
+                  onBlur={e => e.target.style.borderColor = c.borderDefault}
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-text-primary text-sm font-medium mb-1.5">
+                <label htmlFor="password" className="block text-sm font-medium mb-1.5" style={{ color: c.textPrimary }}>
                   Password
                 </label>
                 <input
@@ -168,33 +232,49 @@ export default function Signup() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Min 8 characters"
-                  className="w-full px-4 py-3 border border-border-default rounded-lg focus:outline-none focus:border-border-focus focus:ring-2 focus:ring-action-primary/20 transition-all placeholder:text-text-tertiary"
+                  className="w-full px-4 py-3 border focus:outline-none focus:ring-2 transition-all placeholder:text-text-tertiary"
+                  style={{
+                    borderColor: c.borderDefault,
+                    borderRadius: radius,
+                    '--tw-ring-color': `${c.borderFocus}33`,
+                  }}
+                  onFocus={e => e.target.style.borderColor = c.borderFocus}
+                  onBlur={e => e.target.style.borderColor = c.borderDefault}
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-action-primary hover:bg-action-primary-hover active:bg-action-primary-active text-text-on-dark font-semibold py-3 px-4 rounded-lg transition-colors mt-6"
+                className="w-full font-semibold py-3 px-4 transition-colors mt-6"
+                style={{
+                  backgroundColor: c.actionPrimary,
+                  color: c.textOnDark,
+                  borderRadius: radius,
+                }}
+                onMouseEnter={e => e.target.style.backgroundColor = c.actionPrimaryHover}
+                onMouseLeave={e => e.target.style.backgroundColor = c.actionPrimary}
               >
-                Create Account
+                {content.submitButtonText}
               </button>
             </form>
 
             {/* Sign In Link */}
-            <p className="text-center mt-6 text-text-secondary">
-              Already have an account?{' '}
-              <a href="/signin" className="text-text-accent font-medium hover:underline">
-                Sign in
+            <p className="text-center mt-6" style={{ color: c.textSecondary }}>
+              {content.signinPrompt}{' '}
+              <a href="/signin" className="font-medium hover:underline" style={{ color: c.actionPrimary }}>
+                {content.signinLinkText}
               </a>
             </p>
 
             {/* Terms */}
-            <p className="text-center mt-6 text-text-tertiary text-xs">
-              By creating an account, you agree to our{' '}
-              <a href="/terms" className="underline hover:text-text-secondary">Terms of Service</a>
-              {' '}and{' '}
-              <a href="/privacy" className="underline hover:text-text-secondary">Privacy Policy</a>.
-            </p>
+            {layout.showTerms && (
+              <p className="text-center mt-6 text-text-tertiary text-xs">
+                By creating an account, you agree to our{' '}
+                <a href="/terms" className="underline hover:text-text-secondary">Terms of Service</a>
+                {' '}and{' '}
+                <a href="/privacy" className="underline hover:text-text-secondary">Privacy Policy</a>.
+              </p>
+            )}
           </div>
         </div>
       </div>
