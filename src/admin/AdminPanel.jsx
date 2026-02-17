@@ -213,7 +213,6 @@ function LayoutTab({ config, updateConfig }) {
   return (
     <>
       <SectionLabel>Visibility</SectionLabel>
-      <ToggleControl label="Browser Chrome" checked={config.layout.showBrowserChrome} onChange={v => updateConfig('layout.showBrowserChrome', v)} />
       <ToggleControl label="Google Button" checked={config.layout.showGoogleButton} onChange={v => updateConfig('layout.showGoogleButton', v)} />
       <ToggleControl label="Divider" checked={config.layout.showDivider} onChange={v => updateConfig('layout.showDivider', v)} />
       <ToggleControl label="Course Cards" checked={config.layout.showCourseCards} onChange={v => updateConfig('layout.showCourseCards', v)} />

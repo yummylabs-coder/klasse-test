@@ -43,7 +43,6 @@ export const DEFAULT_CONFIG = {
     { title: 'Brand Identity Design from Scratch', instructor: 'Mia Park', lessons: '12 lessons', price: '\u20AC59', badge: 'Bestseller', emoji: '\u{1F3A8}', gradient: 'linear-gradient(135deg, #c4b5fd 0%, #7c3aed 50%, #5b21b6 100%)', dotGradient: 'linear-gradient(135deg, #c4b5fd 0%, #7c3aed 100%)', visible: true },
   ],
   layout: {
-    showBrowserChrome: false,
     showGoogleButton: true,
     showDivider: true,
     showCourseCards: true,

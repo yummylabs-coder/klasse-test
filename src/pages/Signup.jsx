@@ -17,40 +17,38 @@ const KlasseLogo = () => (
   </svg>
 )
 
-const CourseCard = ({ title, instructor, lessons, price, badge, emoji, gradient, dotGradient, image }) => (
+const CourseCard = ({ title, instructor, lessons, price, badge, emoji, gradient, dotGradient }) => (
   <div className="shrink-0 w-[200px] rounded-lg overflow-hidden border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)]"
     style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)' }}>
-    {/* Card image area */}
     <div className="h-[100px] relative overflow-hidden" style={{ background: gradient }}>
-      {image ? (
-        <img src={image} alt={title} className="w-full h-full object-cover" />
-      ) : emoji ? (
+      {emoji && (
         <div className="absolute inset-0 flex items-center justify-center opacity-50">
-          <span className="text-[32px]">{emoji}</span>
+          <span style={{ fontSize: '32px', lineHeight: 1 }}>{emoji}</span>
         </div>
-      ) : null}
+      )}
       {badge && (
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-bold text-white uppercase tracking-wider"
-          style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}>
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-white uppercase tracking-wider"
+          style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)', fontSize: '9px', fontWeight: 700, fontFamily: '"DM Sans", sans-serif' }}>
           {badge}
         </div>
       )}
     </div>
-    {/* Card content */}
     <div className="p-3">
-      <p className="text-[12px] font-bold text-white/90 leading-[1.3] mb-2" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+      <p className="text-white/90 leading-[1.3] mb-2" style={{ fontSize: '12px', fontWeight: 700, fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
         {title}
       </p>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-medium text-white/40" style={{ fontFamily: '"DM Sans", sans-serif' }}>{lessons}</span>
-        <span className="text-[11px] font-bold" style={{
+        <span className="text-white/40" style={{ fontSize: '10px', fontWeight: 500, fontFamily: '"DM Sans", sans-serif' }}>{lessons}</span>
+        <span style={{
+          fontSize: '11px',
+          fontWeight: 700,
           fontFamily: '"Plus Jakarta Sans", sans-serif',
           color: price === 'Free' ? '#6ee7b7' : 'rgba(255,255,255,0.65)'
         }}>{price}</span>
       </div>
       <div className="flex items-center gap-1">
         <div className="w-3 h-3 rounded-md shrink-0" style={{ background: dotGradient }} />
-        <span className="text-[10px] text-white/35" style={{ fontFamily: '"DM Sans", sans-serif' }}>by {instructor}</span>
+        <span className="text-white/35" style={{ fontSize: '10px', fontFamily: '"DM Sans", sans-serif' }}>by {instructor}</span>
       </div>
     </div>
   </div>
@@ -75,31 +73,14 @@ export default function Signup() {
   const layout = config.layout
   const radius = `${layout.borderRadius}px`
 
-  const brandFont = `'${t.brandFont}', system-ui, sans-serif`
-  const bodyFont = `'${t.bodyFont}', system-ui, sans-serif`
-  const inputFont = `'${t.inputFont}', system-ui, sans-serif`
+  const brandFont = `"${t.brandFont}", system-ui, sans-serif`
+  const bodyFont = `"${t.bodyFont}", system-ui, sans-serif`
+  const inputFont = `"${t.inputFont}", system-ui, sans-serif`
 
   return (
     <div className="min-h-screen flex flex-col" style={{ fontFamily: bodyFont, backgroundColor: c.brandCanvas }}>
-      {/* Browser Chrome Bar */}
-      {layout.showBrowserChrome && (
-        <div className="bg-[#F5F5F3] border-b border-[#EDEDED] px-4 py-2 flex items-center gap-2">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.borderDefault }} />
-          </div>
-          <div className="flex-1 flex justify-center">
-            <span className="text-text-tertiary text-sm">klasse.io/signup</span>
-          </div>
-        </div>
-      )}
-
       {/* Main Content */}
-      <div
-        className="flex-1 flex flex-col lg:flex-row p-4 md:p-5 gap-4 md:gap-5"
-        style={{ flexDirection: layout.brandPanelPosition === 'right' ? undefined : undefined }}
-      >
+      <div className="flex-1 flex flex-col lg:flex-row p-4 md:p-5 gap-4 md:gap-5">
         {/* Branding Side */}
         <div
           className={`flex-1 rounded-xl md:rounded-2xl p-8 md:p-16 flex flex-col items-center justify-center relative overflow-hidden min-h-[500px] md:min-h-0 ${
@@ -109,14 +90,14 @@ export default function Signup() {
         >
           {/* Radial gradient decorations */}
           <div className="absolute -right-[120px] -top-[120px] w-[400px] h-[400px] rounded-[200px] pointer-events-none"
-            style={{ background: `radial-gradient(circle, rgba(34,22,255,0.15) 0%, rgba(34,22,255,0) 70%)` }} />
+            style={{ background: 'radial-gradient(circle, rgba(34,22,255,0.15) 0%, rgba(34,22,255,0) 70%)' }} />
           <div className="absolute -left-[80px] -bottom-[80px] w-[300px] h-[300px] rounded-[150px] pointer-events-none"
-            style={{ background: `radial-gradient(circle, rgba(245,142,57,0.1) 0%, rgba(245,142,57,0) 70%)` }} />
+            style={{ background: 'radial-gradient(circle, rgba(245,142,57,0.1) 0%, rgba(245,142,57,0) 70%)' }} />
 
           {/* Content container */}
           <div className="flex flex-col items-center justify-center flex-1 max-w-[474px] w-full relative z-10 pb-16">
             {/* Logo */}
-            <div className="flex items-center justify-center mb-[-64px] z-20">
+            <div className="flex items-center justify-center mb-10">
               <div className="w-16 h-16 flex items-center justify-center overflow-hidden px-1.5 py-2"
                 style={{ backgroundColor: c.actionPrimary }}>
                 <KlasseLogo />
@@ -124,38 +105,38 @@ export default function Signup() {
             </div>
 
             {/* Headline */}
-            <div className="flex flex-col items-center justify-center flex-1 gap-5 mb-[-64px] z-10 text-center">
-              <h1
-                className="leading-[1.15] tracking-[-0.36px]"
-                style={{
-                  fontFamily: brandFont,
-                  fontSize: `${t.headlineSize}px`,
-                  fontWeight: t.headlineWeight,
-                  color: c.textOnDark,
-                }}
-              >
+            <div className="flex flex-col items-center text-center gap-5">
+              <h1 style={{
+                fontFamily: brandFont,
+                fontSize: `${t.headlineSize}px`,
+                fontWeight: t.headlineWeight,
+                color: c.textOnDark,
+                lineHeight: 1.15,
+                letterSpacing: '-0.36px',
+                margin: 0,
+              }}>
                 {content.headlineLine1}<br />
                 {content.headlineLine2}{' '}
                 <em style={{ color: c.accentOrange, fontStyle: 'italic' }}>{content.headlineAccent}</em>.
               </h1>
-              <p
-                className="text-center leading-[1.3] max-w-[474px]"
-                style={{
-                  fontFamily: bodyFont,
-                  fontSize: `${t.bodySize}px`,
-                  color: c.textOnDark,
-                }}
-              >
+              <p style={{
+                fontFamily: bodyFont,
+                fontSize: `${t.bodySize}px`,
+                color: c.textOnDark,
+                lineHeight: 1.3,
+                maxWidth: '474px',
+                textAlign: 'center',
+                margin: 0,
+              }}>
                 {content.subheadline}
               </p>
             </div>
           </div>
 
-          {/* Course Cards Row - scrolling at bottom */}
+          {/* Course Cards Row */}
           {layout.showCourseCards && (
-            <div className="absolute bottom-0 left-0 right-0 opacity-[0.38]">
-              <div className="flex gap-[19px] items-center px-4 pb-4"
-                style={{ transform: 'translateX(-40%)' }}>
+            <div className="absolute bottom-0 left-0 right-0" style={{ opacity: 0.38 }}>
+              <div className="flex gap-[19px] items-end px-4 pb-4" style={{ transform: 'translateX(-15%)' }}>
                 {config.cards.filter(card => card.visible).map((card, i) => (
                   <CourseCard key={i} {...card} />
                 ))}
@@ -170,41 +151,37 @@ export default function Signup() {
         }`}>
           <div className="w-full max-w-[380px]">
             {/* Form Header */}
-            <div className="flex flex-col gap-2 mb-4">
-              <div className="text-center">
-                <h2
-                  className="font-bold leading-[1.25]"
-                  style={{
-                    fontFamily: brandFont,
-                    fontSize: `${t.formTitleSize}px`,
-                    color: c.textPrimary,
-                  }}
-                >
-                  {content.formTitle}
-                </h2>
-              </div>
-              <div className="text-center">
-                <p
-                  className="leading-[1.3]"
-                  style={{
-                    fontFamily: bodyFont,
-                    fontSize: `${t.bodySize}px`,
-                    color: '#878784',
-                  }}
-                >
-                  {content.formSubtitle}
-                </p>
-              </div>
+            <div className="text-center mb-4">
+              <h2 style={{
+                fontFamily: brandFont,
+                fontSize: `${t.formTitleSize}px`,
+                fontWeight: 700,
+                color: c.textPrimary,
+                lineHeight: 1.25,
+                margin: '0 0 8px 0',
+              }}>
+                {content.formTitle}
+              </h2>
+              <p style={{
+                fontFamily: bodyFont,
+                fontSize: `${t.bodySize}px`,
+                fontWeight: 400,
+                color: '#878784',
+                lineHeight: 1.3,
+                margin: 0,
+              }}>
+                {content.formSubtitle}
+              </p>
             </div>
 
             {/* Google Sign Up */}
             {layout.showGoogleButton && (
               <button
-                className="w-full flex items-center justify-center gap-2 h-[42px] border bg-white hover:bg-bg-hover transition-colors"
-                style={{ borderColor: c.borderDefault, borderRadius: radius }}
+                className="w-full flex items-center justify-center gap-2 border bg-white hover:bg-[#F5F5F3] transition-colors cursor-pointer"
+                style={{ borderColor: c.borderDefault, borderRadius: radius, height: '42px' }}
               >
                 <GoogleIcon />
-                <span className="text-[14px] font-semibold" style={{ fontFamily: brandFont, color: c.textPrimary }}>
+                <span style={{ fontSize: '14px', fontWeight: 600, fontFamily: brandFont, color: c.textPrimary }}>
                   {content.googleButtonText}
                 </span>
               </button>
@@ -212,20 +189,20 @@ export default function Signup() {
 
             {/* Divider */}
             {layout.showDivider && (
-              <div className="flex items-center gap-3 pt-4">
-                <div className="flex-1 h-px" style={{ backgroundColor: '#D0D0CB' }} />
-                <span className="text-[12px] font-medium" style={{ fontFamily: bodyFont, color: '#D0D0CB' }}>
+              <div className="flex items-center gap-3" style={{ paddingTop: '16px' }}>
+                <div className="flex-1" style={{ height: '1px', backgroundColor: '#D0D0CB' }} />
+                <span style={{ fontSize: '12px', fontWeight: 500, fontFamily: bodyFont, color: '#D0D0CB' }}>
                   {content.dividerText}
                 </span>
-                <div className="flex-1 h-px" style={{ backgroundColor: '#D0D0CB' }} />
+                <div className="flex-1" style={{ height: '1px', backgroundColor: '#D0D0CB' }} />
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 mt-4">
+            <form onSubmit={handleSubmit} className="flex flex-col" style={{ gap: '12px', marginTop: '16px' }}>
               {/* Full Name */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-semibold" style={{ fontFamily: inputFont, color: c.textPrimary }}>
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, fontFamily: inputFont, color: c.textPrimary }}>
                   Full Name
                 </label>
                 <input
@@ -234,9 +211,12 @@ export default function Signup() {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className="w-full h-[40px] px-[13px] border bg-white text-[13px] focus:outline-none focus:ring-2 transition-all"
+                  className="w-full border bg-white focus:outline-none focus:ring-2 transition-all"
                   style={{
                     fontFamily: inputFont,
+                    fontSize: '13px',
+                    height: '40px',
+                    padding: '0 13px',
                     borderColor: c.borderDefault,
                     borderRadius: radius,
                     color: c.textPrimary,
@@ -248,8 +228,8 @@ export default function Signup() {
               </div>
 
               {/* Email */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-semibold" style={{ fontFamily: inputFont, color: c.textPrimary }}>
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, fontFamily: inputFont, color: c.textPrimary }}>
                   Email
                 </label>
                 <input
@@ -258,9 +238,12 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full h-[40px] px-[13px] border bg-white text-[13px] focus:outline-none focus:ring-2 transition-all"
+                  className="w-full border bg-white focus:outline-none focus:ring-2 transition-all"
                   style={{
                     fontFamily: inputFont,
+                    fontSize: '13px',
+                    height: '40px',
+                    padding: '0 13px',
                     borderColor: c.borderDefault,
                     borderRadius: radius,
                     color: c.textPrimary,
@@ -272,8 +255,8 @@ export default function Signup() {
               </div>
 
               {/* Password */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-semibold" style={{ fontFamily: inputFont, color: c.textPrimary }}>
+              <div className="flex flex-col" style={{ gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, fontFamily: inputFont, color: c.textPrimary }}>
                   Password
                 </label>
                 <input
@@ -282,9 +265,12 @@ export default function Signup() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Min 8 characters"
-                  className="w-full h-[40px] px-[13px] border bg-white text-[13px] focus:outline-none focus:ring-2 transition-all"
+                  className="w-full border bg-white focus:outline-none focus:ring-2 transition-all"
                   style={{
                     fontFamily: inputFont,
+                    fontSize: '13px',
+                    height: '40px',
+                    padding: '0 13px',
                     borderColor: c.borderDefault,
                     borderRadius: radius,
                     color: c.textPrimary,
@@ -298,9 +284,12 @@ export default function Signup() {
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full h-[48px] font-semibold text-[14px] transition-colors"
+                className="w-full transition-colors cursor-pointer border-0"
                 style={{
                   fontFamily: brandFont,
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  height: '48px',
                   backgroundColor: c.actionPrimary,
                   color: 'white',
                   borderRadius: radius,
@@ -313,18 +302,18 @@ export default function Signup() {
             </form>
 
             {/* Sign In Link */}
-            <div className="flex items-center justify-center gap-1 mt-4">
-              <span className="text-[13px]" style={{ fontFamily: bodyFont, color: '#64645F' }}>
+            <div className="flex items-center justify-center gap-1" style={{ marginTop: '16px' }}>
+              <span style={{ fontSize: '13px', fontFamily: bodyFont, color: '#64645F' }}>
                 {content.signinPrompt}
               </span>
-              <a href="/signin" className="text-[13px] font-bold no-underline" style={{ fontFamily: bodyFont, color: c.actionPrimary }}>
+              <a href="/signin" className="no-underline" style={{ fontSize: '13px', fontWeight: 700, fontFamily: bodyFont, color: c.actionPrimary }}>
                 {content.signinLinkText}
               </a>
             </div>
 
             {/* Terms */}
             {layout.showTerms && (
-              <p className="text-center mt-4 text-[11px] tracking-[0.66px]" style={{ fontFamily: bodyFont, color: '#ABABAA' }}>
+              <p className="text-center" style={{ marginTop: '16px', fontSize: '11px', letterSpacing: '0.66px', fontFamily: bodyFont, color: '#ABABAA' }}>
                 By creating an account, you agree to our{' '}
                 <a href="/terms" className="no-underline" style={{ color: '#64645F' }}>Terms</a>
                 {' '}and{' '}
